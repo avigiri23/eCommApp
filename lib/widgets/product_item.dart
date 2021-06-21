@@ -45,5 +45,3 @@ class ProductItem extends StatelessWidget {
     );
   }
 }
-
-//continue from lec 6
