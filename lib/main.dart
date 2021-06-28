@@ -47,5 +47,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-//continue from lec 11
