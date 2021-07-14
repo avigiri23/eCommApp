@@ -12,41 +12,54 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class _OrdersScreenState extends State<OrdersScreen> {
-  var _isLoading = false;
+  Future _ordersFuture;
+
+  Future obtainOrdersFuture() {
+    return Provider.of<Orders>(context, listen: false).fetchAndSetOrders();
+  }
+
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
-    // Future.delayed(Duration.zero).then((_) async {
-
-    _isLoading = true;
-
-    Provider.of<Orders>(context, listen: false).fetchAndSetOrders();
-    setState(() {
-      _isLoading = false;
-    });
-    // });
+    _ordersFuture = obtainOrdersFuture();
     super.initState();
   }
-  //Above stuff ONLY WORKS WHEN LISTEN IS FALSE, ELSE YOU'LL NEED TO USE SETSTATE AND FUTURE DELAY HACK
 
   @override
   Widget build(BuildContext context) {
-    final orderData = Provider.of<Orders>(context);
+    //final orderData = Provider.of<Orders>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Your orders'),
-      ),
-      drawer: AppDrawer(),
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : ListView.builder(
-              itemBuilder: (ctx, i) => OrderItem(
-                orderData.orders[i],
-              ),
-              itemCount: orderData.orders.length,
-            ),
-    );
+        appBar: AppBar(
+          title: Text('Your orders'),
+        ),
+        drawer: AppDrawer(),
+        body: FutureBuilder(
+          //REVISE THIS
+          future: _ordersFuture,
+          builder: (ctx, dataSnapshot) {
+            if (dataSnapshot.connectionState == ConnectionState.waiting)
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            else {
+              if (dataSnapshot.error != null) {
+                //
+                //Do error handling
+                return Center(
+                  child: Text('An error occured'),
+                );
+              } else {
+                return Consumer<Orders>(
+                    builder: (ctx, orderData, child) => ListView.builder(
+                          itemBuilder: (ctx, i) => OrderItem(
+                            orderData.orders[i],
+                          ),
+                          itemCount: orderData.orders.length,
+                        ));
+              }
+            }
+          },
+        ));
   }
 }
