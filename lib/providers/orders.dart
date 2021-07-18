@@ -19,15 +19,23 @@ class OrderItem {
 }
 
 class Orders with ChangeNotifier {
+  final String authToken;
   List<OrderItem> _orders = [];
+  final String userId;
+
+  Orders(
+    this.authToken,
+    this.userId,
+    this._orders,
+  );
 
   List<OrderItem> get orders {
     return [..._orders];
   }
 
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
-    const url =
-        'https://first-proj-30c9d-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json';
+    final url =
+        'https://first-proj-30c9d-default-rtdb.asia-southeast1.firebasedatabase.app/orders/$userId.json?auth=$authToken';
 
     final timeStamp = DateTime.now();
     final response = await http.post(Uri.parse(url),
@@ -54,8 +62,8 @@ class Orders with ChangeNotifier {
   }
 
   Future<void> fetchAndSetOrders() async {
-    const url =
-        'https://first-proj-30c9d-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json';
+    final url =
+        'https://first-proj-30c9d-default-rtdb.asia-southeast1.firebasedatabase.app/orders/$userId.json?auth=$authToken';
     final response = await http.get(Uri.parse(url));
     final List<OrderItem> loadedOrders = [];
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
