@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/helpers/custom_route.dart';
 import 'package:shop_app/providers/auth.dart';
 import '../screens/orders_screen.dart';
 import '../screens/user_product_screen.dart';
@@ -27,8 +28,11 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.timer),
             title: Text('Orders'),
             onTap: () {
-              Navigator.of(context)
-                  .pushReplacementNamed(OrdersScreen.routeName);
+              // Navigator.of(context)
+              //     .pushReplacementNamed(OrdersScreen.routeName);
+              Navigator.of(context).pushReplacement(
+                CustomRoute(builder: (ctx) => OrdersScreen()),
+              );
             },
           ),
           Divider(),
