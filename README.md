@@ -1,6 +1,6 @@
 # shop_app
 
-A new Flutter project.
+Firebase integrated ecommerce app mock
 
 ## Getting Started
 
